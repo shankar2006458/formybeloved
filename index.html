@@ -1,0 +1,1683 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>For You, My Love</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;family=Lato:wght@300;400;700&amp;display=swap" rel="stylesheet">
+  <style>
+    body {
+      box-sizing: border-box;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    :root {
+      --bg-primary: #f8f6f4;
+      --surface: #ffffff;
+      --text-primary: #2c2c2c;
+      --accent-primary: #9b6b6b;
+      --accent-secondary: #d4af37;
+    }
+    
+    .app-wrapper {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+    
+    .page {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+      overflow: auto;
+    }
+    
+    .page.active {
+      opacity: 1;
+      visibility: visible;
+      z-index: 1;
+    }
+    
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+      transition: width 0.4s ease;
+      z-index: 1000;
+    }
+    
+    .nav-dots {
+      position: fixed;
+      right: 2rem;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    
+    .nav-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 2px solid var(--accent-primary);
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .nav-dot:hover {
+      transform: scale(1.3);
+    }
+    
+    .nav-dot.active {
+      background: var(--accent-primary);
+      transform: scale(1.2);
+    }
+    
+    @media (max-width: 768px) {
+      .nav-dots {
+        right: 1rem;
+      }
+      
+      .nav-dot {
+        width: 10px;
+        height: 10px;
+      }
+    }
+    
+    .font-display {
+      font-family: 'Playfair Display', serif;
+    }
+    
+    .font-body {
+      font-family: 'Lato', sans-serif;
+    }
+    
+    .section-container {
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 3rem 1.5rem;
+    }
+    
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    @keyframes pulse-soft {
+      0%, 100% { transform: scale(1); opacity: 0.8; }
+      50% { transform: scale(1.1); opacity: 1; }
+    }
+    
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      14% { transform: scale(1.1); }
+      28% { transform: scale(1); }
+      42% { transform: scale(1.1); }
+      70% { transform: scale(1); }
+    }
+    
+    @keyframes confetti-fall {
+      0% { transform: translateY(-100%) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100%) rotate(720deg); opacity: 0; }
+    }
+    
+    @keyframes heart-rise {
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateY(-200px) scale(0); opacity: 0; }
+    }
+    
+    @keyframes sprinkle-fall {
+      0% { 
+        transform: translateY(-100vh) rotate(0deg); 
+        opacity: 1; 
+      }
+      100% { 
+        transform: translateY(100vh) rotate(360deg); 
+        opacity: 0.8; 
+      }
+    }
+    
+    @keyframes burst-out {
+      0% { 
+        transform: translate(-50%, -50%) scale(0) rotate(0deg); 
+        opacity: 1; 
+      }
+      100% { 
+        transform: translate(-50%, -50%) scale(20) rotate(180deg); 
+        opacity: 0; 
+      }
+    }
+    
+    @keyframes bounce-in {
+      0% {
+        transform: scale(0) rotate(-180deg);
+        opacity: 0;
+      }
+      50% {
+        transform: scale(1.2) rotate(10deg);
+      }
+      100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+      }
+    }
+    
+    @keyframes slide-in-left {
+      from {
+        opacity: 0;
+        transform: translateX(-50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+    
+    @keyframes slide-in-right {
+      from {
+        opacity: 0;
+        transform: translateX(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+    
+    @keyframes zoom-in {
+      from {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+    
+    .scroll-reveal {
+      opacity: 0;
+    }
+    
+    .scroll-reveal.revealed {
+      animation: fadeInUp 0.8s ease-out forwards;
+    }
+    
+    .scroll-slide-left {
+      opacity: 0;
+    }
+    
+    .scroll-slide-left.revealed {
+      animation: slide-in-left 0.8s ease-out forwards;
+    }
+    
+    .scroll-slide-right {
+      opacity: 0;
+    }
+    
+    .scroll-slide-right.revealed {
+      animation: slide-in-right 0.8s ease-out forwards;
+    }
+    
+    .scroll-zoom {
+      opacity: 0;
+    }
+    
+    .scroll-zoom.revealed {
+      animation: zoom-in 0.8s ease-out forwards;
+    }
+    
+    .animate-fade-in-up {
+      animation: fadeInUp 1s ease-out forwards;
+    }
+    
+    .animate-float {
+      animation: float 3s ease-in-out infinite;
+    }
+    
+    .animate-pulse-soft {
+      animation: pulse-soft 2s ease-in-out infinite;
+    }
+    
+    .animate-heartbeat {
+      animation: heartbeat 1.5s ease-in-out infinite;
+    }
+    
+    .delay-200 { animation-delay: 0.2s; }
+    .delay-400 { animation-delay: 0.4s; }
+    .delay-600 { animation-delay: 0.6s; }
+    .delay-800 { animation-delay: 0.8s; }
+    
+    .memory-star {
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .memory-star:hover {
+      transform: scale(1.2);
+      filter: drop-shadow(0 0 10px var(--accent-secondary));
+    }
+    
+    .timeline-dot {
+      position: relative;
+    }
+    
+    .timeline-dot::before {
+      content: '';
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      background: var(--accent-primary);
+      border-radius: 50%;
+      left: -73px;
+      top: 8px;
+      box-shadow: 0 0 0 4px var(--bg-primary), 0 0 0 6px var(--accent-primary);
+    }
+    
+    .music-btn {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      z-index: 1000;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 2px solid var(--accent-primary);
+      background: var(--surface);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+    
+    .music-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 4px 15px rgba(155, 107, 107, 0.4);
+    }
+    
+    .celebration-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 100;
+      overflow: hidden;
+    }
+    
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      animation: confetti-fall 3s ease-out forwards;
+    }
+    
+    .floating-heart {
+      position: absolute;
+      animation: heart-rise 2s ease-out forwards;
+    }
+    
+    .sprinkle {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      animation: sprinkle-fall 4s linear infinite;
+      border-radius: 50%;
+    }
+    
+    .burst-ring {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 100px;
+      height: 100px;
+      border: 4px solid;
+      border-radius: 50%;
+      animation: burst-out 1.5s ease-out forwards;
+    }
+    
+    .bounce-element {
+      animation: bounce-in 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+    }
+    
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .modal-overlay.visible {
+      display: flex;
+      opacity: 1;
+    }
+    
+    .modal-content {
+      background: var(--surface);
+      border-radius: 20px;
+      padding: 3rem;
+      max-width: 500px;
+      width: 90%;
+      position: relative;
+      transform: scale(0.9);
+      transition: transform 0.3s ease;
+    }
+    
+    .modal-overlay.visible .modal-content {
+      transform: scale(1);
+    }
+    
+    .modal-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--accent-primary);
+      color: white;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s ease;
+    }
+    
+    .modal-close:hover {
+      transform: scale(1.1);
+    }
+    
+    .btn-yes {
+      background: linear-gradient(135deg, var(--accent-primary), #b38585);
+      color: white;
+      padding: 1rem 3rem;
+      border-radius: 50px;
+      font-size: 1.125rem;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(155, 107, 107, 0.3);
+      position: relative;
+    }
+    
+    .btn-yes:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(155, 107, 107, 0.5);
+    }
+    
+    .btn-hover-text {
+      position: absolute;
+      bottom: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.75rem;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      white-space: nowrap;
+      pointer-events: none;
+      color: var(--accent-primary);
+      font-style: italic;
+    }
+    
+    .btn-yes:hover .btn-hover-text,
+    .btn-memories:hover .btn-hover-text {
+      opacity: 0.7;
+    }
+    
+    .btn-memories {
+      background: transparent;
+      color: var(--text-primary);
+      padding: 0.75rem 2rem;
+      border-radius: 50px;
+      font-size: 0.95rem;
+      border: 1px solid var(--accent-primary);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      opacity: 0.7;
+    }
+    
+    .btn-memories:hover {
+      opacity: 1;
+      background: var(--surface);
+      transform: translateY(-2px);
+    }
+    
+    .reason-card {
+      background: var(--surface);
+      border-radius: 20px;
+      padding: 2rem;
+      margin: 1rem 0;
+      border-left: 4px solid var(--accent-secondary);
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    
+    .reason-card:hover {
+      transform: translateX(10px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    }
+    
+    .warmup-option {
+      background: var(--surface);
+      border: 2px solid transparent;
+      padding: 1rem 2rem;
+      border-radius: 15px;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      margin: 0.5rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      transform: scale(1);
+    }
+    
+    .warmup-option:hover {
+      border-color: var(--accent-primary);
+      transform: scale(1.05);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    
+    .warmup-option.selected {
+      border-color: var(--accent-secondary);
+      background: linear-gradient(135deg, var(--surface), #fffef8);
+      box-shadow: 0 6px 20px rgba(212, 175, 55, 0.3);
+      transform: scale(1.05);
+    }
+    
+    .photo-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+    
+    .photo-placeholder {
+      aspect-ratio: 4/3;
+      background: linear-gradient(135deg, var(--surface), #f5f5f5);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 2px solid var(--accent-primary);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .photo-placeholder:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+    }
+    
+    .message-box {
+      background: var(--surface);
+      border-radius: 20px;
+      padding: 2.5rem;
+      margin: 2rem 0;
+      border-left: 4px solid var(--accent-primary);
+      position: relative;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    }
+    
+    .message-box::before {
+      content: '"';
+      position: absolute;
+      top: -10px;
+      left: 20px;
+      font-size: 4rem;
+      color: var(--accent-primary);
+      opacity: 0.2;
+      font-family: 'Playfair Display', serif;
+    }
+    
+    .countdown-display {
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+      margin: 2rem 0;
+      flex-wrap: wrap;
+    }
+    
+    .countdown-item {
+      text-align: center;
+      min-width: 100px;
+      background: var(--surface);
+      padding: 1.5rem 2rem;
+      border-radius: 16px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    }
+    
+    .countdown-number {
+      font-size: 3rem;
+      font-weight: bold;
+      color: var(--accent-primary);
+      font-family: 'Playfair Display', serif;
+    }
+    
+    .countdown-label {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      opacity: 0.7;
+      margin-top: 0.5rem;
+    }
+    
+    .letter-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: var(--surface);
+      padding: 3rem;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+      position: relative;
+    }
+    
+    .letter-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 8px;
+      background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+      border-radius: 12px 12px 0 0;
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full font-body overflow-hidden" style="background: var(--bg-primary); color: var(--text-primary);"><!-- Progress Bar -->
+  <div id="progressBar" class="progress-bar" style="width: 14%"></div><!-- Navigation Dots -->
+  <div class="nav-dots" id="navDots"></div><!-- Music Control --> <button id="musicBtn" class="music-btn" aria-label="Toggle music">
+   <svg id="musicIcon" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13" /> <circle cx="6" cy="18" r="3"></circle> <circle cx="18" cy="16" r="3"></circle>
+   </svg></button> <!-- Celebration Container -->
+  <div id="celebrationContainer" class="celebration-container"></div><!-- Modal for memories -->
+  <div id="memoryModal" class="modal-overlay">
+   <div class="modal-content"><button class="modal-close" onclick="closeMemoryModal()">✕</button>
+    <div id="modalMemoryContent" class="font-body text-lg leading-relaxed"></div>
+   </div>
+  </div><!-- Modal for "No" response -->
+  <div id="noModal" class="modal-overlay">
+   <div class="modal-content text-center">
+    <div class="text-6xl mb-6 animate-heartbeat">
+     💕
+    </div>
+    <h3 class="font-display text-3xl mb-4" style="color: var(--accent-primary);">Nice try… but you don't really have a choice.</h3>
+    <p class="font-body text-lg mb-8 opacity-80">You have to say yes 💕</p><button onclick="closeNoModal()" class="btn-yes font-body text-lg px-8 py-3"> Okay fine 😄 </button>
+   </div>
+  </div>
+  <div class="app-wrapper h-full w-full"><!-- Page 0: Landing -->
+   <div class="page active" data-page="0">
+    <section class="section-container relative" style="background: linear-gradient(180deg, var(--bg-primary) 0%, var(--surface) 100%);">
+     <div class="text-center max-w-lg mx-auto">
+      <div class="animate-fade-in-up opacity-0" style="animation-delay: 0.2s;"><span class="text-sm tracking-widest uppercase opacity-60 font-body">For My Beloved</span>
+      </div>
+      <h1 id="herNameDisplay" class="font-display text-6xl md:text-7xl font-semibold mt-6 animate-fade-in-up opacity-0" style="animation-delay: 0.5s; color: var(--accent-primary);">My Love My Cutie</h1>
+      <p id="landingMessageDisplay" class="mt-8 text-lg leading-relaxed opacity-0 font-body animate-fade-in-up" style="animation-delay: 0.8s; animation-fill-mode: forwards;">There's something I've been wanting to share with you...</p>
+      <div class="mt-12 animate-fade-in-up opacity-0" style="animation-delay: 1.2s;"><button onclick="nextPage()" class="btn-yes font-body" style="position: relative;"> Begin Our Journey <span class="btn-hover-text">I've been waiting to show you this...</span> </button>
+      </div>
+     </div><!-- Decorative elements -->
+     <div class="absolute top-20 left-10 animate-float opacity-20">
+      <svg width="40" height="40" viewbox="0 0 24 24" fill="var(--accent-primary)"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+      </svg>
+     </div>
+     <div class="absolute bottom-32 right-16 animate-float opacity-20" style="animation-delay: 1s;">
+      <svg width="30" height="30" viewbox="0 0 24 24" fill="var(--accent-secondary)"><polygon points="12,2 15,9 22,9 17,14 19,21 12,17 5,21 7,14 2,9 9,9" />
+      </svg>
+     </div>
+    </section>
+   </div><!-- Page 1: Timeline -->
+   <div class="page" data-page="1">
+    <section class="section-container" style="background: var(--bg-primary);">
+     <div class="max-w-3xl mx-auto w-full py-8">
+      <h2 class="font-display text-5xl md:text-6xl text-center mb-4">Our Story</h2>
+      <p class="text-center mb-12 opacity-60 font-body">Every moment with you has been a chapter in our beautiful story</p><!-- Countdown since first moment -->
+      <div class="countdown-display mb-16">
+       <div class="countdown-item">
+        <div id="daysCount" class="countdown-number">
+         0
+        </div>
+        <div class="countdown-label font-body">
+         Days
+        </div>
+       </div>
+       <div class="countdown-item">
+        <div id="hoursCount" class="countdown-number">
+         0
+        </div>
+        <div class="countdown-label font-body">
+         Hours
+        </div>
+       </div>
+       <div class="countdown-item">
+        <div id="minutesCount" class="countdown-number">
+         0
+        </div>
+        <div class="countdown-label font-body">
+         Minutes
+        </div>
+       </div>
+       <div class="countdown-item">
+        <div id="secondsCount" class="countdown-number">
+         0
+        </div>
+        <div class="countdown-label font-body">
+         Seconds
+        </div>
+       </div>
+      </div>
+      <div class="relative pl-16 border-l-3" style="border-color: var(--accent-primary); border-left-width: 3px;"><!-- Timeline Moment 1 -->
+       <div class="timeline-item mb-16">
+        <div class="timeline-dot"><span id="moment1DateDisplay" class="text-sm uppercase tracking-wider opacity-60 font-body">November 16, 2023</span>
+         <h3 id="moment1TitleDisplay" class="font-display text-3xl mt-2 font-semibold" style="color: var(--accent-primary);">The Day We Started Our Story</h3>
+         <p class="mt-3 leading-relaxed opacity-80 font-body">Ei din amra snap streak suru korechilam, so suppose eitai amader story r suruyat!!!🙈</p>
+         <div class="mt-4 flex gap-2 items-center"><span class="memory-star" data-memory="Exact date toh amra jani na toh snap streak e dhora jak" data-style="romantic" onclick="showMemory(this)">
+           <svg width="28" height="28" viewbox="0 0 24 24" fill="var(--accent-secondary)"><polygon points="12,2 15,9 22,9 17,14 19,21 12,17 5,21 7,14 2,9 9,9" />
+           </svg></span> <span class="text-xs opacity-50 font-body">Click star</span>
+         </div>
+        </div>
+       </div><!-- Timeline Moment 2 -->
+       <div class="timeline-item mb-16">
+        <div class="timeline-dot"><span id="moment2DateDisplay" class="text-sm uppercase tracking-wider opacity-60 font-body">June 6, 2025</span>
+         <h3 id="moment2TitleDisplay" class="font-display text-3xl mt-2 font-semibold" style="color: var(--accent-primary);">Our First Adventure</h3>
+         <p class="mt-3 leading-relaxed opacity-80 font-body">Adventure bolte toh serom kichu e nei but tor stahe waterpark jawa e amar akche adventur er theke kichu kom noi😌</p>
+         <div class="mt-4 flex gap-2 items-center"><span class="memory-star" data-memory="Your laugh that day is my favorite sound in the world🥰" data-style="playful" onclick="showMemory(this)">
+           <svg width="28" height="28" viewbox="0 0 24 24" fill="var(--accent-primary)"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+           </svg></span> <span class="text-xs opacity-50 font-body">Click heart</span>
+         </div>
+        </div>
+       </div><!-- Timeline Moment 3 -->
+       <div class="timeline-item mb-8">
+        <div class="timeline-dot"><span id="moment3DateDisplay" class="text-sm uppercase tracking-wider opacity-60 font-body">December 25, 2022</span>
+         <h3 id="moment3TitleDisplay" class="font-display text-3xl mt-2 font-semibold" style="color: var(--accent-primary);">When I Knew</h3>
+         <p class="mt-3 leading-relaxed opacity-80 font-body">Haa but jokhon ami bujhechilam tor proti amar fellings bass tokhon theke e ami aamar sob muhurto tor sathe katate cheyechi❤️</p>
+         <div class="mt-4 flex gap-2 items-center"><span class="memory-star" data-memory="Je din tui confess korechili se din ami onk onk khusi hoyechilam" data-style="emotional" onclick="showMemory(this)">
+           <svg width="28" height="28" viewbox="0 0 24 24" fill="var(--accent-secondary)"><polygon points="12,2 15,9 22,9 17,14 19,21 12,17 5,21 7,14 2,9 9,9" />
+           </svg></span> <span class="text-xs opacity-50 font-body">Click star</span>
+         </div>
+        </div>
+       </div>
+      </div>
+      <div class="text-center mt-12"><button onclick="nextPage()" class="btn-yes font-body"> Continue </button>
+      </div>
+     </div>
+    </section>
+   </div><!-- Page 2: Photo Gallery / Memories -->
+   <div class="page" data-page="2">
+    <section class="section-container" style="background: linear-gradient(180deg, var(--surface) 0%, var(--bg-primary) 100%);">
+     <div class="max-w-4xl mx-auto w-full py-8">
+      <h2 class="font-display text-5xl md:text-6xl text-center mb-4 scroll-reveal">Our Memories</h2>
+      <p class="text-center mb-12 opacity-60 font-body scroll-reveal">Moments frozen in time, forever in my heart</p>
+      <div id="photoGallery" class="photo-gallery"><!-- Photos will be dynamically loaded from DEMO_PHOTOS array -->
+      </div>
+      <div class="message-box mt-12 scroll-slide-left">
+       <p class="text-lg leading-relaxed font-body opacity-90">Eikhaner Prottekta chobi amar moner moddhe dhore ache hajar hajar hashir golpo. Ei pics gulo onek onek karon tule dhore je ami keno tomar bhalobashay aro beshi dube gechi. Eita shudhu memories noy — eita amar medicine er kaj kore jokhon ami tomake miss kori ❤️</p>
+      </div>
+      <div class="text-center mt-12 scroll-reveal"><button onclick="nextPage()" class="btn-yes font-body"> Keep Going </button>
+      </div>
+     </div>
+    </section>
+   </div><!-- Page 3: Why I Choose You -->
+   <div class="page" data-page="3">
+    <section class="section-container" style="background: var(--bg-primary);">
+     <div class="max-w-2xl mx-auto w-full py-8">
+      <h2 class="font-display text-5xl md:text-6xl text-center mb-4">Why I Choose You</h2>
+      <p class="text-center mb-12 opacity-60 font-body">Not poetry. Just truth.</p>
+      <div class="reason-card">
+       <div class="flex items-start gap-4">
+        <div class="text-3xl">
+         💝
+        </div>
+        <p id="reason1Display" class="text-lg leading-relaxed font-body flex-1">Karon tumi amake ekta bhalo manush hote motivate korecho — kono pressure diye noy, tomar presence diye. Ami nijeke palte felechi just for you.</p>
+       </div>
+      </div>
+      <div class="reason-card">
+       <div class="flex items-start gap-4">
+        <div class="text-3xl">
+         😊
+        </div>
+        <p id="reason2Display" class="text-lg leading-relaxed font-body flex-1">Tui je bhabe amar baje uncle joke gulo teo hasis, sathe amake prithibir shobcheye boro roster mone koray.</p>
+       </div>
+      </div>
+      <div class="reason-card">
+       <div class="flex items-start gap-4">
+        <div class="text-3xl">
+         🏡
+        </div>
+        <p id="reason3Display" class="text-lg leading-relaxed font-body flex-1">Amar tor ase pase hbby safe feel hoi - that's irreplaceable.</p>
+       </div>
+      </div>
+      <div class="text-center mt-12"><button onclick="nextPage()" class="btn-yes font-body"> There's More... </button>
+      </div>
+     </div>
+    </section>
+   </div><!-- Page 4: Love Letter -->
+   <div class="page" data-page="4">
+    <section class="section-container" style="background: linear-gradient(180deg, var(--surface) 0%, var(--bg-primary) 100%);">
+     <div class="max-w-3xl mx-auto w-full py-8">
+      <h2 class="font-display text-5xl md:text-6xl text-center mb-12">A Letter For You My KuchuPuchu</h2>
+      <div class="letter-container">
+       <p class="font-display text-lg mb-4" style="color: var(--accent-primary);">My Dearest <span id="herNameLetter">Love</span>,</p>
+       <div class="space-y-4 font-body text-base leading-relaxed opacity-90">
+        <p>Ekhon bose jokhon amar moner shob feelings sobde bandhar cheshta korchi, tokhon bujhte parchi — kono bhashai konodin puro bhabe bojhate parbe na j tui amar kache ki r koto ta important. Tui amar sobcheye ondhokar raat er porer sokal, amar sob theke fav manus jar kache ami sob mon khule bolte pari.</p>
+        <p>Tui amake shikhiyechis je bhalobasha shudhu moner ekta onubhuti noy, eta protidin mon theke asa 1ta feeling. Ar prottek sokal, prottek raat — ami toke-e choose kori. Ami choose kori tor ghum-bhanga sokaler chhoto mejaj, tor raat-er shesh obdi chola kotha-gulo. Ami choose kori tor chhoto bod obbhas, ar tor sopno gulo — je sopno gulo ami amar nijer moto kore dekhte sikhechi.</p>
+        <p>Amake choose korar jonno onk onk thank you — ami je bhabe nijeke duniya-r samne tulte chai seta amar real version noi, tui jeivabe amake dekhis setai asole ami. Dhonnobad tor amar proti shanti-bhora dhorjo, tor mon-chhoya misti hashi, ar je bhabe tui shadharon moments gulo-ke amar jibone chirokaler jonno oshadharon kore tulis tar jonno.</p>
+        <p class="font-display text-lg" style="color: var(--accent-primary); margin-top: 2rem;">With all my heart,<br><span id="yourNameLetter">Your Love</span></p>
+       </div>
+      </div>
+      <div class="text-center mt-12"><button onclick="nextPage()" class="btn-yes font-body"> Continue </button>
+      </div>
+     </div>
+    </section>
+   </div><!-- Page 5: Warm-up Question -->
+   <div class="page" data-page="5">
+    <section class="section-container" style="background: var(--bg-primary);">
+     <div class="max-w-2xl mx-auto w-full text-center">
+      <h2 class="font-display text-4xl md:text-5xl mb-8">Quick question, my love...</h2>
+      <p class="text-xl mb-12 opacity-80 font-body">What's your favorite thing about us?</p>
+      <div id="warmupOptions" class="flex flex-wrap justify-center gap-4"><button class="warmup-option font-body" onclick="selectWarmup(this, 'Our adventures together')"> 🌍 Our adventures together </button> <button class="warmup-option font-body" onclick="selectWarmup(this, 'How we make each other laugh')"> 😄 How we make each other laugh </button> <button class="warmup-option font-body" onclick="selectWarmup(this, 'The comfortable silences')"> 💫 The comfortable silences </button> <button class="warmup-option font-body" onclick="selectWarmup(this, 'Everything')"> 💕 Everything </button>
+      </div>
+      <div id="warmupResponse" class="mt-8 hidden opacity-0 transition-all duration-700 ease-out transform translate-y-4">
+       <p class="font-display text-3xl mb-8" style="color: var(--accent-primary);">That's one of my favorites too. 💕</p><button onclick="nextPage()" class="btn-yes font-body"> Now comes the part that means everything… </button>
+      </div>
+     </div>
+    </section>
+   </div><!-- Page 6: The Proposal -->
+   <div class="page" data-page="6">
+    <section class="section-container" style="background: linear-gradient(180deg, var(--bg-primary) 0%, var(--surface) 50%, var(--bg-primary) 100%);">
+     <div class="max-w-2xl mx-auto w-full text-center">
+      <div class="mb-8 animate-heartbeat">
+       <svg width="80" height="80" viewbox="0 0 24 24" fill="var(--accent-primary)"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+       </svg>
+      </div>
+      <h2 id="herNameProposal" class="font-display text-5xl md:text-6xl mb-8 font-semibold" style="color: var(--text-primary);">My Dearest Love</h2>
+      <p id="proposalMessageDisplay" class="text-lg md:text-xl leading-relaxed mb-12 opacity-90 font-body">Every day with you has been a gift I never knew I needed. You've shown me what real love looks like - patient, kind, and endlessly supportive. I can't imagine my future without you in it.</p>
+      <p class="font-display text-4xl md:text-5xl mb-12" style="color: var(--accent-primary);">Will you be mine forever?</p>
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4"><button onclick="handleYes()" class="btn-yes font-body text-xl px-12 py-4" style="position: relative;"> Yes, Forever 💕 <span class="btn-hover-text">Make me the happiest person alive</span> </button> <button onclick="handleNo()" class="btn-memories font-body text-xl px-12 py-4" style="position: relative;"> No 😅 <span class="btn-hover-text">You know you can't resist...</span> </button>
+      </div>
+     </div>
+    </section>
+   </div><!-- Page 7: Celebration -->
+   <div class="page" data-page="7">
+    <section class="section-container" style="background: linear-gradient(180deg, var(--surface) 0%, var(--bg-primary) 100%);">
+     <div class="max-w-2xl mx-auto w-full text-center">
+      <div class="mb-8 bounce-element opacity-0" style="animation-delay: 0.2s;">
+       <svg width="120" height="120" viewbox="0 0 24 24" fill="var(--accent-primary)" class="animate-heartbeat"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+       </svg>
+      </div>
+      <h2 class="font-display text-6xl md:text-7xl mb-8 font-bold bounce-element opacity-0" style="color: var(--accent-primary); animation-delay: 0.4s;">Ohh You Said Yes!!!</h2>
+      <p class="text-xl leading-relaxed mb-8 opacity-80 font-body bounce-element opacity-0" style="animation-delay: 0.6s;">This is just the beginning of our forever journey cutie.</p>
+      <div class="mt-12 bounce-element opacity-0" style="animation-delay: 1s;"><button onclick="nextPage()" class="btn-yes font-body text-xl px-12 py-4"> One More Thing... 💕 </button>
+      </div>
+     </div>
+    </section>
+   </div><!-- Page 8: Final Celebration & Letter -->
+   <div class="page" data-page="8">
+    <section class="section-container" style="background: linear-gradient(135deg, var(--bg-primary) 0%, var(--surface) 50%, var(--bg-primary) 100%);">
+     <div class="max-w-3xl mx-auto w-full text-center py-8">
+      <div class="mb-8">
+       <div class="text-7xl mb-4 bounce-element opacity-0" style="animation-delay: 0.2s;">
+        💕✨🎉
+       </div>
+       <h2 class="font-display text-5xl md:text-6xl mb-4 font-bold bounce-element opacity-0" style="color: var(--accent-primary); animation-delay: 0.4s;">I'm The Luckiest Person Alive</h2>
+      </div>
+      <div class="letter-container text-left mt-8 bounce-element opacity-0" style="animation-delay: 0.6s;">
+       <p class="font-display text-lg mb-4" style="color: var(--accent-primary);">My Dearest <span id="herNameFinal">Love</span>,</p>
+       <div class="space-y-4 font-body text-base leading-relaxed opacity-90">
+        <p>Toh ebar last part. Nischoi tui YES select korechis karon ami toke amai reject korar option e di ni. Yup you have no option toke amar sathe e sara jibon thakte hbe kichu korar nei. Tor kotha vablei mon ta kmon khusi khusi lage.</p>
+        <p>Ei khusi r muhurto-gulo e ami hajar bar kolpona korechi, kintu shotti ta tar cheyeo onek beshi shundor. Tui — amar dekha shobcheye odbhut, gandu, shundori, cute manush — tui  j amar shathe ekta jibon katate chas, eta vebe e amar j koto khusi hoi likhe bojhate parbo na.</p>
+        <p>Tui amar shadharon jibon-ke ekta oshadharon golpo banie diyechis. Prottek ta hashi, prottek ta raat-er sesh obdi chola kotha, prottek ta chupchap shokal — shob kichui aj amader eto dur niye eseche. Erokom e ki amra cirokal er jonno thakte pari? Jodi thakte pari tahole tar theke besi khusi r ki hbe!!!</p>
+        <p>Amar moddhe valo manus dekhar jonno dhonnobad. Dhonnobad amar chhoto chhoto bad habit-er shathe dhorjo rakhar jonno, amar baje joke-gulo teo hashar jonno, ar ami je rokom — shei bhabei amake bhalobashar jonno. Thanku you sooo much amake eto valobasar jonno. I love you soo soo much cutie my kuchupuchu. Ami toke puro mon diye bhalobasbo, tor shathe khub khub hasbo khub moja korbo. Ami prottek ta din cheshta korbo toke shei bhabei shukhi korte, je bhabe tui aaj amake korechis…</p>
+        <p class="font-semibold" style="color: var(--accent-primary);">This is just the beginning of our greatest adventure.</p>
+        <p class="font-display text-lg" style="color: var(--accent-secondary); margin-top: 2rem;">All my love, today and always,<br><span id="yourNameFinal">Your Love</span></p>
+       </div>
+      </div>
+      <div id="endingMessageFinal" class="mt-12 text-lg opacity-80 font-body bounce-element opacity-0" style="animation-delay: 0.8s;">
+       Now put down your phone r aii amake msg/phn kor r onk onk pamper kor eto mehnat j korechi🙈... R ha I have something to give you😉
+      </div>
+      <div class="mt-8 flex flex-wrap justify-center gap-4 text-4xl bounce-element opacity-0" style="animation-delay: 1s;"><span>💕</span> <span>💍</span> <span>✨</span> <span>🥂</span> <span>🎊</span> <span>💐</span> <span>🌟</span>
+      </div>
+     </div>
+    </section>
+   </div>
+  </div>
+<footer class="fixed bottom-4 left-1/2 -translate-x-1/2 text-xs opacity-50 font-body z-[1100]">
+  Made with ❤️ just for you by ~ Shankar
+</footer>
+
+  <script>
+    // Default configuration
+    const defaultConfig = {
+      her_name: "My Love My Cutie",
+      your_name: "Your Love Your Mard",
+      landing_message: "There's something I've been wanting to share with you...",
+      moment_1_date: "November 16, 2023",
+      moment_1_title: "The Day We Started Our Story",
+      moment_2_date: "June 6, 2025",
+      moment_2_title: "Our First Adventure",
+      moment_3_date: "February 10, 2024",
+      moment_3_title: "When I Knew",
+      reason_1: "Karon tui amake ekta bhalo manush hote motivate korechis — kono pressure diye noy, tomar presence diye. Ami nijeke palte felechi just for you.",
+      reason_2: "Tui je bhabe amar baje uncle joke gulo teo hasis, sathe amake prithibir shobcheye boro roster mone koray.",
+      reason_3: "Amar tor ase pase hbby safe feel hoi - that's irreplaceable.",
+      proposal_message: "Tor shathe prottek din amar jonno ekta upohar jeta ami agge bujhte parini je toke amar eto dorkar chilo. Tui amake dekhiyechis ashol bhalobasha kake bole — tor dhorjo er tarif kora uchit😁 r thank you shobshomoy shathe thakar jonno. Toke chara amar future ami kalpona o korte pari na.",
+      ending_message: "Now put down your phone r aii amake msg/phn kor r onk onk pamper kor eto mehnat j korechi🙈... R ha I have something to give you😉",
+      background_color: "#f8f6f4",
+      surface_color: "#ffffff",
+      text_color: "#2c2c2c",
+      primary_accent: "#9b6b6b",
+      secondary_accent: "#d4af37",
+      font_family: "Lato",
+      font_size: 16
+    };
+
+    // ========== DEMO CONTENT CONFIGURATION ==========
+    // REPLACE THESE WITH YOUR REAL CONTENT
+    
+    // Demo background music URL - Replace with your music file URL
+    const DEMO_MUSIC_URL = 'https://files.catbox.moe/3noode.mpeg';
+    
+    // Demo photo URLs - Replace with your actual photo URLs
+    const DEMO_PHOTOS = [
+      'https://i.ibb.co/TDdpPJPw/Whats-App-Image-2026-01-11-at-10-09-11-AM-1.jpg', // First Date
+      'https://i.ibb.co/PsXBSc2b/Whats-App-Image-2026-01-11-at-10-09-11-AM-2.jpg', // Sunset
+      'https://i.ibb.co/dsnQ4f8H/Whats-App-Image-2026-01-11-at-10-09-12-AM-2.jpg', // Favorite Place
+      'https://i.ibb.co/V0SYfG2s/Whats-App-Image-2026-01-11-at-10-09-12-AM-1.jpg', // Cozy Evening
+      'https://i.ibb.co/mrFrdd7K/Whats-App-Image-2026-01-11-at-10-09-12-AM.jpg', // Adventure
+      'https://i.ibb.co/zhFktNYR/Whats-App-Image-2026-01-11-at-10-09-11-AM.jpg'  // Just Us
+    ];
+    
+    // Photo labels corresponding to each demo photo
+    const PHOTO_LABELS = [
+      'Amader First Date',
+      'Sei Perfect Sunset',
+      'Amader Favorite Place Dominozzz🍕',
+      'Cozy Evening Together',
+      'Amader soo called Adventure😆',
+      'Just Us...Umm KuchuPuchu😍'
+    ];
+    
+    // ========== END DEMO CONTENT CONFIGURATION ==========
+
+    let currentConfig = { ...defaultConfig };
+    let isPlaying = false;
+    let currentPage = 0;
+    const totalPages = 9;
+    // ISO format for reliable date parsing across all browsers
+    let startDate = new Date('2022-06-15T00:00:00');
+    
+    // Track user choices and interactions
+    let warmupChoice = null;
+    let proposalPageArrivalTime = null;
+    let proposalResponseTime = null;
+    
+    // Audio element for background music
+    let audioElement = null;
+
+    // Initialize Element SDK
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange: async (config) => {
+          currentConfig = { ...defaultConfig, ...config };
+          updateUI();
+        },
+        mapToCapabilities: (config) => ({
+          recolorables: [
+            {
+              get: () => config.background_color || defaultConfig.background_color,
+              set: (value) => window.elementSdk.setConfig({ background_color: value })
+            },
+            {
+              get: () => config.surface_color || defaultConfig.surface_color,
+              set: (value) => window.elementSdk.setConfig({ surface_color: value })
+            },
+            {
+              get: () => config.text_color || defaultConfig.text_color,
+              set: (value) => window.elementSdk.setConfig({ text_color: value })
+            },
+            {
+              get: () => config.primary_accent || defaultConfig.primary_accent,
+              set: (value) => window.elementSdk.setConfig({ primary_accent: value })
+            },
+            {
+              get: () => config.secondary_accent || defaultConfig.secondary_accent,
+              set: (value) => window.elementSdk.setConfig({ secondary_accent: value })
+            }
+          ],
+          borderables: [],
+          fontEditable: {
+            get: () => config.font_family || defaultConfig.font_family,
+            set: (value) => window.elementSdk.setConfig({ font_family: value })
+          },
+          fontSizeable: {
+            get: () => config.font_size || defaultConfig.font_size,
+            set: (value) => window.elementSdk.setConfig({ font_size: value })
+          }
+        }),
+        mapToEditPanelValues: (config) => new Map([
+          ["her_name", config.her_name || defaultConfig.her_name],
+          ["your_name", config.your_name || defaultConfig.your_name],
+          ["landing_message", config.landing_message || defaultConfig.landing_message],
+          ["moment_1_date", config.moment_1_date || defaultConfig.moment_1_date],
+          ["moment_1_title", config.moment_1_title || defaultConfig.moment_1_title],
+          ["moment_2_date", config.moment_2_date || defaultConfig.moment_2_date],
+          ["moment_2_title", config.moment_2_title || defaultConfig.moment_2_title],
+          ["moment_3_date", config.moment_3_date || defaultConfig.moment_3_date],
+          ["moment_3_title", config.moment_3_title || defaultConfig.moment_3_title],
+          ["reason_1", config.reason_1 || defaultConfig.reason_1],
+          ["reason_2", config.reason_2 || defaultConfig.reason_2],
+          ["reason_3", config.reason_3 || defaultConfig.reason_3],
+          ["proposal_message", config.proposal_message || defaultConfig.proposal_message],
+          ["ending_message", config.ending_message || defaultConfig.ending_message]
+        ])
+      });
+    }
+    
+    // Initialize audio element with demo music
+    function initAudio() {
+      audioElement = new Audio(DEMO_MUSIC_URL);
+      audioElement.loop = true; // Loop the music continuously
+      audioElement.volume = 0.5; // Set to 50% volume by default
+      
+      // Handle audio loading errors gracefully
+      audioElement.addEventListener('error', function() {
+        console.warn('Demo music failed to load. Music button will remain visible but inactive.');
+      });
+    }
+    
+    // Call audio initialization
+    initAudio();
+
+    function updateUI() {
+      const config = currentConfig;
+      
+      // Update CSS variables
+      document.documentElement.style.setProperty('--bg-primary', config.background_color || defaultConfig.background_color);
+      document.documentElement.style.setProperty('--surface', config.surface_color || defaultConfig.surface_color);
+      document.documentElement.style.setProperty('--text-primary', config.text_color || defaultConfig.text_color);
+      document.documentElement.style.setProperty('--accent-primary', config.primary_accent || defaultConfig.primary_accent);
+      document.documentElement.style.setProperty('--accent-secondary', config.secondary_accent || defaultConfig.secondary_accent);
+      
+      // Update fonts
+      const fontFamily = config.font_family || defaultConfig.font_family;
+      const baseSize = config.font_size || defaultConfig.font_size;
+      document.body.style.fontFamily = `${fontFamily}, 'Lato', sans-serif`;
+      document.body.style.fontSize = `${baseSize}px`;
+      
+      document.querySelectorAll('.font-display').forEach(el => {
+        el.style.fontFamily = `'Playfair Display', ${fontFamily}, serif`;
+      });
+      
+      // Update text content
+      const herName = config.her_name || defaultConfig.her_name;
+      const yourName = config.your_name || defaultConfig.your_name;
+      
+      document.getElementById('herNameDisplay').textContent = herName;
+      document.getElementById('landingMessageDisplay').textContent = config.landing_message || defaultConfig.landing_message;
+      document.getElementById('moment1DateDisplay').textContent = config.moment_1_date || defaultConfig.moment_1_date;
+      document.getElementById('moment1TitleDisplay').textContent = config.moment_1_title || defaultConfig.moment_1_title;
+      document.getElementById('moment2DateDisplay').textContent = config.moment_2_date || defaultConfig.moment_2_date;
+      document.getElementById('moment2TitleDisplay').textContent = config.moment_2_title || defaultConfig.moment_2_title;
+      document.getElementById('moment3DateDisplay').textContent = config.moment_3_date || defaultConfig.moment_3_date;
+      document.getElementById('moment3TitleDisplay').textContent = config.moment_3_title || defaultConfig.moment_3_title;
+      document.getElementById('reason1Display').textContent = config.reason_1 || defaultConfig.reason_1;
+      document.getElementById('reason2Display').textContent = config.reason_2 || defaultConfig.reason_2;
+      document.getElementById('reason3Display').textContent = config.reason_3 || defaultConfig.reason_3;
+      document.getElementById('herNameProposal').textContent = herName;
+      document.getElementById('herNameLetter').textContent = herName;
+      document.getElementById('yourNameLetter').textContent = yourName;
+      document.getElementById('herNameFinal').textContent = herName;
+      document.getElementById('yourNameFinal').textContent = yourName;
+      
+      // Adapt proposal message based on warmup choice
+      let proposalMessage = config.proposal_message || defaultConfig.proposal_message;
+      if (warmupChoice) {
+        const choiceAdaptations = {
+          'Our adventures together': proposalMessage + " Let's keep exploring the world together, hand in hand.",
+          'How we make each other laugh': proposalMessage + " I want to keep making you laugh for the rest of my life.",
+          'The comfortable silences': proposalMessage + " I want to share every quiet moment with you, forever.",
+          'Everything': proposalMessage + " You're my everything, and I want to be yours too."
+        };
+        proposalMessage = choiceAdaptations[warmupChoice] || proposalMessage;
+      }
+      document.getElementById('proposalMessageDisplay').textContent = proposalMessage;
+      
+      document.getElementById('endingMessageFinal').textContent = config.ending_message || defaultConfig.ending_message;
+      
+      // Parse start date for countdown - use ISO format internally for reliability
+      // The display text can be anything, but we need a valid date for calculations
+      try {
+        const dateString = config.moment_1_date || defaultConfig.moment_1_date;
+        // Try to parse the date string intelligently
+        const parsed = new Date(dateString);
+        
+        // Check if date is valid
+        if (!isNaN(parsed.getTime())) {
+          startDate = parsed;
+        } else {
+          // Fallback to default ISO date if parsing fails
+          startDate = new Date('2022-06-15T00:00:00');
+        }
+      } catch (e) {
+        // Fallback to default ISO date
+        startDate = new Date('2022-06-15T00:00:00');
+      }
+    }
+    
+    // Page navigation - can go back to visited pages, but not skip forward
+    let maxVisitedPage = 0; // Track the furthest page the user has reached
+    
+    function goToPage(pageNum) {
+      // Can't go to pages beyond the furthest visited page + 1
+      if (pageNum < 0 || pageNum > maxVisitedPage + 1 || pageNum >= totalPages) {
+        return;
+      }
+      
+      const pages = document.querySelectorAll('.page');
+      
+      pages.forEach(page => page.classList.remove('active'));
+      
+      pages[pageNum].classList.add('active');
+      
+      currentPage = pageNum;
+      
+      // Update max visited page
+      if (pageNum > maxVisitedPage) {
+        maxVisitedPage = pageNum;
+      }
+      
+      updateProgressBar();
+      updateNavDots();
+      
+      // Scroll to top of new page
+      pages[pageNum].scrollTop = 0;
+      
+      // Trigger scroll animations for the new page
+      triggerPageAnimations(pageNum);
+      
+      // Track arrival at proposal page
+      if (pageNum === 6) {
+        proposalPageArrivalTime = Date.now();
+      }
+      
+      // Trigger final celebration on page 8
+      if (pageNum === 8) {
+        setTimeout(() => {
+          triggerFinalCelebration();
+        }, 500);
+      }
+    }
+    
+    function nextPage() {
+      if (currentPage < totalPages - 1) {
+        goToPage(currentPage + 1);
+      }
+    }
+    
+    function updateProgressBar() {
+      const progress = ((currentPage + 1) / totalPages) * 100;
+      document.getElementById('progressBar').style.width = `${progress}%`;
+    }
+    
+    function updateNavDots() {
+      const navDots = document.getElementById('navDots');
+      navDots.innerHTML = '';
+      
+      for (let i = 0; i < totalPages; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'nav-dot';
+        
+        // Mark current page
+        if (i === currentPage) {
+          dot.classList.add('active');
+        }
+        
+        // Only allow clicking on visited pages (not future pages)
+        if (i <= maxVisitedPage) {
+          // Unlocked/visited pages - fully interactive
+          dot.style.cursor = 'pointer';
+          dot.style.opacity = '1';
+          dot.addEventListener('click', () => goToPage(i));
+        } else {
+          // Locked pages - clearly disabled with visual feedback
+          dot.style.cursor = 'not-allowed';
+          dot.style.opacity = '0.2';
+          dot.style.borderStyle = 'dashed';
+          dot.style.transform = 'scale(0.85)';
+        }
+        
+        navDots.appendChild(dot);
+      }
+    }
+
+    // Show memory in modal with styled reactions
+    function showMemory(element) {
+      const memory = element.getAttribute('data-memory');
+      const style = element.getAttribute('data-style') || 'romantic';
+      const modal = document.getElementById('memoryModal');
+      const content = document.getElementById('modalMemoryContent');
+      
+      // Different styles based on memory type
+      let icon = '';
+      let accentColor = '';
+      
+      switch(style) {
+        case 'romantic':
+          icon = '💕';
+          accentColor = 'var(--accent-primary)';
+          break;
+        case 'playful':
+          icon = '😄✨';
+          accentColor = 'var(--accent-secondary)';
+          break;
+        case 'emotional':
+          icon = '🥹💫';
+          accentColor = 'var(--accent-primary)';
+          break;
+      }
+      
+      content.innerHTML = `
+        <div class="text-center">
+          <div class="text-5xl mb-4">${icon}</div>
+          <p class="text-lg leading-relaxed" style="color: ${accentColor}; font-style: italic;">${memory}</p>
+        </div>
+      `;
+      modal.classList.add('visible');
+    }
+    
+    function closeMemoryModal() {
+      document.getElementById('memoryModal').classList.remove('visible');
+    }
+    
+    // Photo message
+    function showPhotoMessage(title) {
+      const modal = document.getElementById('memoryModal');
+      const content = document.getElementById('modalMemoryContent');
+      
+      content.innerHTML = `<div class="text-center"><div class="text-4xl mb-4">💖📸</div><p class="font-display text-2xl mb-3" style="color: var(--accent-primary);">${title}</p><p class="opacity-80">A moment I'll treasure forever</p></div>`;
+      modal.classList.add('visible');
+    }
+    
+    // Load demo photos into the gallery
+    function loadPhotoGallery() {
+      const gallery = document.getElementById('photoGallery');
+      if (!gallery) return;
+      
+      gallery.innerHTML = ''; // Clear existing content
+      
+      DEMO_PHOTOS.forEach((photoUrl, index) => {
+        const photoContainer = document.createElement('div');
+        photoContainer.className = 'photo-placeholder scroll-zoom';
+        photoContainer.style.animationDelay = `${(index + 1) * 0.1}s`;
+        photoContainer.style.cursor = 'pointer';
+        photoContainer.style.overflow = 'hidden';
+        photoContainer.onclick = () => showPhotoMessage(PHOTO_LABELS[index] || 'Our Memory');
+        
+        // Create image element
+        const img = document.createElement('img');
+        img.src = photoUrl;
+        img.alt = PHOTO_LABELS[index] || 'Memory photo';
+        img.style.width = '100%';
+        img.style.height = '100%';
+        img.style.objectFit = 'cover';
+        img.style.transition = 'transform 0.3s ease';
+        
+        // Add hover effect
+        photoContainer.addEventListener('mouseenter', () => {
+          img.style.transform = 'scale(1.1)';
+        });
+        
+        photoContainer.addEventListener('mouseleave', () => {
+          img.style.transform = 'scale(1)';
+        });
+        
+        // Handle image loading errors - fallback to emoji
+        img.onerror = function() {
+          this.style.display = 'none';
+          const fallbackEmoji = document.createElement('span');
+          fallbackEmoji.className = 'text-6xl';
+          fallbackEmoji.textContent = '📸';
+          photoContainer.appendChild(fallbackEmoji);
+        };
+        
+        photoContainer.appendChild(img);
+        gallery.appendChild(photoContainer);
+      });
+    }
+
+    // Warmup selection with personalized responses
+    function selectWarmup(button, choice) {
+      document.querySelectorAll('.warmup-option').forEach(opt => {
+        opt.classList.remove('selected');
+      });
+      button.classList.add('selected');
+      
+      // Save choice for later use
+      warmupChoice = choice;
+      
+      const response = document.getElementById('warmupResponse');
+      const responseText = response.querySelector('p');
+      
+      // Define unique responses for each choice
+      const responses = {
+        'Our adventures together': "Me too! Every adventure with you feels like a scene from a movie I never want to end. Let's keep exploring the world together. 🌍✨",
+        'How we make each other laugh': "Your laugh is my favorite melody! I love how we can turn the most ordinary moments into the best memories just by being silly together. 😄💕",
+        'The comfortable silences': "Those quiet moments with you are when I feel most at peace. Not needing to fill the silence is when I know we're truly connected. 💫💕",
+        'Everything': "That's exactly how I feel too. Every little thing about us—the big moments and the small ones—they all matter. You're my everything. 💕✨"
+      };
+      
+      // Get the appropriate response text
+      const newResponseText = responses[choice] || "That's one of my favorites too. 💕";
+      
+      // If response is already visible, fade out and update
+      if (!response.classList.contains('hidden')) {
+        response.classList.add('opacity-0', 'translate-y-4');
+        setTimeout(() => {
+          responseText.textContent = newResponseText;
+          setTimeout(() => {
+            response.classList.remove('opacity-0', 'translate-y-4');
+          }, 10);
+        }, 300);
+      } else {
+        // First time showing response
+        responseText.textContent = newResponseText;
+        setTimeout(() => {
+          response.classList.remove('hidden');
+          // Trigger animation after element is displayed
+          setTimeout(() => {
+            response.classList.remove('opacity-0', 'translate-y-4');
+          }, 10);
+        }, 500);
+      }
+    }
+
+    // Handle Yes response
+    function handleYes() {
+      // Calculate response time
+      if (proposalPageArrivalTime) {
+        proposalResponseTime = (Date.now() - proposalPageArrivalTime) / 1000; // in seconds
+      }
+      
+      goToPage(7);
+      
+      // Update celebration message based on response time
+      setTimeout(() => {
+        updateCelebrationMessage();
+        triggerCelebration();
+      }, 300);
+    }
+    
+    // Update celebration message based on response time
+    function updateCelebrationMessage() {
+      const celebrationPage = document.querySelector('[data-page="7"]');
+      const messageElement = celebrationPage.querySelector('.opacity-80');
+      
+      if (!proposalResponseTime || proposalResponseTime < 3) {
+        // Instant response
+        messageElement.textContent = "You didn't even hesitate! That makes my heart so full. This is just the beginning of our forever.";
+      } else if (proposalResponseTime < 10) {
+        // Quick response
+        messageElement.textContent = "You said yes! This is just the beginning of our forever.";
+      } else {
+        // Thoughtful pause
+        messageElement.textContent = "I could feel you thinking about it... and you still said yes! That means everything to me. This is just the beginning of our forever.";
+      }
+    }
+    
+    // Handle No response - show playful popup
+    function handleNo() {
+      const modal = document.getElementById('noModal');
+      modal.classList.add('visible');
+    }
+    
+    // Close No modal
+    function closeNoModal() {
+      const modal = document.getElementById('noModal');
+      modal.classList.remove('visible');
+    }
+
+    // Celebration animation
+    function triggerCelebration() {
+      const container = document.getElementById('celebrationContainer');
+      
+      // Adapt colors based on warmup choice
+      let colors = [
+        currentConfig.primary_accent || defaultConfig.primary_accent,
+        currentConfig.secondary_accent || defaultConfig.secondary_accent
+      ];
+      
+      if (warmupChoice === 'Our adventures together') {
+        // Adventurous - vibrant, energetic colors
+        colors.push('#ff6b6b', '#ffd700', '#87ceeb', '#ff8c42', '#98fb98', '#ff69b4');
+      } else if (warmupChoice === 'How we make each other laugh') {
+        // Playful - bright, cheerful colors
+        colors.push('#ffd700', '#ff69b4', '#98fb98', '#ffb6c1', '#ffa500', '#87ceeb');
+      } else if (warmupChoice === 'The comfortable silences') {
+        // Calm - soft, peaceful colors
+        colors.push('#dda0dd', '#b0c4de', '#f0e68c', '#dcdcdc', '#ffb6c1', '#add8e6');
+      } else {
+        // Everything - full spectrum
+        colors.push('#ff69b4', '#ffd700', '#ff6b6b', '#87ceeb', '#98fb98', '#dda0dd', '#ffa500', '#ffb6c1');
+      }
+      
+      // Create burst rings
+      for (let i = 0; i < 3; i++) {
+        setTimeout(() => {
+          const ring = document.createElement('div');
+          ring.className = 'burst-ring';
+          ring.style.borderColor = colors[Math.floor(Math.random() * colors.length)];
+          ring.style.animationDelay = `${i * 0.2}s`;
+          container.appendChild(ring);
+          
+          setTimeout(() => ring.remove(), 1500);
+        }, i * 200);
+      }
+      
+      // Create confetti with choice-based intensity
+      let confettiCount = 80;
+      let confettiSpeed = 40;
+      
+      if (warmupChoice === 'Our adventures together') {
+        confettiCount = 100; // More energetic
+        confettiSpeed = 30;
+      } else if (warmupChoice === 'The comfortable silences') {
+        confettiCount = 60; // More gentle
+        confettiSpeed = 60;
+      }
+      
+      for (let i = 0; i < confettiCount; i++) {
+        setTimeout(() => {
+          const confetti = document.createElement('div');
+          confetti.className = 'confetti';
+          confetti.style.left = `${Math.random() * 100}%`;
+          confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+          confetti.style.animationDelay = `${Math.random() * 2}s`;
+          confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+          confetti.style.width = `${5 + Math.random() * 10}px`;
+          confetti.style.height = `${5 + Math.random() * 10}px`;
+          container.appendChild(confetti);
+          
+          setTimeout(() => confetti.remove(), 3000);
+        }, i * confettiSpeed);
+      }
+      
+      // Create continuous sprinkles
+      const sprinkleInterval = setInterval(() => {
+        for (let i = 0; i < 3; i++) {
+          const sprinkle = document.createElement('div');
+          sprinkle.className = 'sprinkle';
+          sprinkle.style.left = `${Math.random() * 100}%`;
+          sprinkle.style.background = colors[Math.floor(Math.random() * colors.length)];
+          sprinkle.style.animationDelay = `${Math.random()}s`;
+          sprinkle.style.animationDuration = `${3 + Math.random() * 2}s`;
+          container.appendChild(sprinkle);
+          
+          setTimeout(() => sprinkle.remove(), 5000);
+        }
+      }, 300);
+      
+      // Stop sprinkles after page 7
+      setTimeout(() => {
+        clearInterval(sprinkleInterval);
+      }, 8000);
+      
+      // Create floating hearts
+      for (let i = 0; i < 30; i++) {
+        setTimeout(() => {
+          const heart = document.createElement('div');
+          heart.className = 'floating-heart';
+          heart.innerHTML = '💕';
+          heart.style.left = `${Math.random() * 100}%`;
+          heart.style.bottom = '0';
+          heart.style.fontSize = `${20 + Math.random() * 30}px`;
+          heart.style.animationDelay = `${Math.random()}s`;
+          container.appendChild(heart);
+          
+          setTimeout(() => heart.remove(), 2000);
+        }, i * 100);
+      }
+    }
+    
+    // Trigger extra celebration for page 8
+    function triggerFinalCelebration() {
+      const container = document.getElementById('celebrationContainer');
+      const colors = [
+        currentConfig.primary_accent || defaultConfig.primary_accent,
+        currentConfig.secondary_accent || defaultConfig.secondary_accent,
+        '#ff69b4',
+        '#ffd700',
+        '#ff6b6b',
+        '#87ceeb',
+        '#98fb98',
+        '#dda0dd',
+        '#ffb6c1',
+        '#ffa500'
+      ];
+      
+      // Massive sprinkle shower
+      for (let i = 0; i < 150; i++) {
+        setTimeout(() => {
+          const sprinkle = document.createElement('div');
+          sprinkle.className = 'sprinkle';
+          sprinkle.style.left = `${Math.random() * 100}%`;
+          sprinkle.style.background = colors[Math.floor(Math.random() * colors.length)];
+          sprinkle.style.animationDelay = `${Math.random() * 2}s`;
+          sprinkle.style.animationDuration = `${3 + Math.random() * 3}s`;
+          sprinkle.style.width = `${6 + Math.random() * 8}px`;
+          sprinkle.style.height = `${6 + Math.random() * 8}px`;
+          container.appendChild(sprinkle);
+          
+          setTimeout(() => sprinkle.remove(), 6000);
+        }, i * 30);
+      }
+      
+      // Continuous celebration
+      const continuousInterval = setInterval(() => {
+        for (let i = 0; i < 5; i++) {
+          const sprinkle = document.createElement('div');
+          sprinkle.className = 'sprinkle';
+          sprinkle.style.left = `${Math.random() * 100}%`;
+          sprinkle.style.background = colors[Math.floor(Math.random() * colors.length)];
+          sprinkle.style.animationDuration = `${3 + Math.random() * 2}s`;
+          container.appendChild(sprinkle);
+          
+          setTimeout(() => sprinkle.remove(), 5000);
+        }
+      }, 400);
+      
+      // Keep celebration going
+      setTimeout(() => {
+        clearInterval(continuousInterval);
+      }, 15000);
+      
+      // Burst rings
+      for (let i = 0; i < 5; i++) {
+        setTimeout(() => {
+          const ring = document.createElement('div');
+          ring.className = 'burst-ring';
+          ring.style.borderColor = colors[Math.floor(Math.random() * colors.length)];
+          container.appendChild(ring);
+          
+          setTimeout(() => ring.remove(), 1500);
+        }, i * 300);
+      }
+      
+      // Extra hearts
+      for (let i = 0; i < 40; i++) {
+        setTimeout(() => {
+          const heart = document.createElement('div');
+          heart.className = 'floating-heart';
+          const heartEmojis = ['💕', '💖', '💗', '💓', '💝', '❤️', '🧡', '💛'];
+          heart.innerHTML = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+          heart.style.left = `${Math.random() * 100}%`;
+          heart.style.bottom = '0';
+          heart.style.fontSize = `${25 + Math.random() * 35}px`;
+          heart.style.animationDelay = `${Math.random() * 0.5}s`;
+          heart.style.animationDuration = `${2 + Math.random()}s`;
+          container.appendChild(heart);
+          
+          setTimeout(() => heart.remove(), 3000);
+        }, i * 80);
+      }
+    }
+
+    // Music toggle - Now actually plays/pauses demo audio
+    document.getElementById('musicBtn').addEventListener('click', function() {
+      if (!audioElement) return;
+      
+      isPlaying = !isPlaying;
+      const icon = document.getElementById('musicIcon');
+      
+      if (isPlaying) {
+        // Play audio
+        audioElement.play().catch(err => {
+          console.warn('Audio playback failed:', err);
+          isPlaying = false;
+        });
+        
+        // Show pause icon
+        icon.innerHTML = '<rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect>';
+      } else {
+        // Pause audio
+        audioElement.pause();
+        
+        // Show play icon
+        icon.innerHTML = '<path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle>';
+      }
+    });
+
+    // Countdown timer
+    function updateCountdown() {
+      const now = new Date();
+      const diff = now - startDate;
+      
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+      
+      document.getElementById('daysCount').textContent = days;
+      document.getElementById('hoursCount').textContent = hours;
+      document.getElementById('minutesCount').textContent = minutes;
+      document.getElementById('secondsCount').textContent = seconds;
+    }
+
+    // Update countdown every second for live counting
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+
+    // Close modal on click outside
+    document.getElementById('memoryModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeMemoryModal();
+      }
+    });
+    
+    // Close No modal on click outside
+    document.getElementById('noModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeNoModal();
+      }
+    });
+
+    // Scroll reveal animation observer
+    function observeScrollAnimations() {
+      const observerOptions = {
+        threshold: 0.15,
+        rootMargin: '0px'
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('revealed');
+            // Don't unobserve so animations can retrigger when navigating back
+          }
+        });
+      }, observerOptions);
+
+      // Observe all scroll animation elements
+      document.querySelectorAll('.scroll-reveal, .scroll-slide-left, .scroll-slide-right, .scroll-zoom').forEach(el => {
+        observer.observe(el);
+      });
+    }
+
+    // Trigger scroll animations when navigating to a page
+    function triggerPageAnimations(pageNum) {
+      const page = document.querySelectorAll('.page')[pageNum];
+      if (!page) return;
+
+      // Reset animations
+      const animatedElements = page.querySelectorAll('.scroll-reveal, .scroll-slide-left, .scroll-slide-right, .scroll-zoom');
+      animatedElements.forEach(el => {
+        el.classList.remove('revealed');
+      });
+
+      // Trigger animations with slight delay
+      setTimeout(() => {
+        animatedElements.forEach(el => {
+          el.classList.add('revealed');
+        });
+      }, 100);
+    }
+
+    // Initialize scroll animations
+    observeScrollAnimations();
+
+    // Initial UI update
+    updateUI();
+    updateProgressBar();
+    updateNavDots(); // Initialize navigation dots
+    loadPhotoGallery(); // Load demo photos into gallery
+
+  </script>
+</body>
+</html>
